@@ -1,7 +1,10 @@
 h1{
     color: red;
 }
-
+body{
+display: flex;
+flex-wrap: wrap;
+}
 canvas, img{
     border: solid 5px black;
 }

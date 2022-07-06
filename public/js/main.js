@@ -1,59 +1,3 @@
-
-const deleteText = document.querySelectorAll('.fa-trash')
-const thumbText = document.querySelectorAll('.fa-thumbs-up')
-
-Array.from(deleteText).forEach((element)=>{
-    element.addEventListener('click', deleteRapper)
-})
-
-Array.from(thumbText).forEach((element)=>{
-    element.addEventListener('click', addLike)
-})
-
-async function deleteRapper(){
-    const sName = this.parentNode.childNodes[1].innerText
-    const bName = this.parentNode.childNodes[3].innerText
-    try{
-        const response = await fetch('deleteRapper', {
-            method: 'delete',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              'stageNameS': sName,
-              'birthNameS': bName
-            })
-          })
-        const data = await response.json()
-        console.log(data)
-        location.reload()
-
-    }catch(err){
-        console.log(err)
-    }
-}
-
-async function addLike(){
-    const sName = this.parentNode.childNodes[1].innerText
-    const bName = this.parentNode.childNodes[3].innerText
-    const tLikes = Number(this.parentNode.childNodes[5].innerText)
-    try{
-        const response = await fetch('addOneLike', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              'stageNameS': sName,
-              'birthNameS': bName,
-              'likesS': tLikes
-            })
-          })
-        const data = await response.json()
-        console.log(data)
-        location.reload()
-
-    }catch(err){
-        console.log(err)
-    }
-}
-
 //sections==================================================================
 const drawingSections = document.querySelectorAll('.drawSection')
 
@@ -64,86 +8,93 @@ Array.from(drawingSections).forEach((element)=>{
   // console.log(element.childNodes[9]) //dit is het canvas
 })
 //sections==================================================================
-//RAPPERS==================================================================
 //SAVING==================================================================
+
+// character
+// sprite
+// dataURI
 
 const canvas = document.querySelectorAll('.draw');
 const imgSpace  = document.querySelector('#displayDrawing')
 const picCode = document.querySelector('#spanWithPictureCode');
 const saveButtons = document.querySelectorAll(".saveButton");
+const loadButtons = document.querySelectorAll(".loadButton");
 
 Array.from(saveButtons).forEach((element)=>{
   element.addEventListener('click', () => trySave(element))
 })
-//TODO: Ik moet de canvas info dataURI hierheen of naar de server krijgen
-async function trySave(name){
+Array.from(loadButtons).forEach((element)=>{
+  element.addEventListener('click', () => tryLoadOriginal(element))
+})
 
-  const drawingName = String(name.name);
-  //const dataURI = canvas.toDataURL();//TODO: dit moet dus specifiek worden 
-  const x = document.querySelector('#' + drawingName)
-  console.log(x + " hoi")
-  const dataURI = x.toDataURL()
-  console.log(dataURI)
-  //TODO: dataURI werkt hier,
 
+async function trySave(element){
+  
+  const currentChar = String(element.name);
+  const currentSpriteID = String(element.id);
+  const currentDataURI = document.querySelector(`#${currentSpriteID}`).toDataURL();
+
+  //saveLogs()
+  
   try
   {
-    // const response = await fetch('/saveDrawing', {
-    //     method: 'POST',
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: JSON.stringify({
-    //         name : drawingName,
-    //         itsMyData: dataURI
-    //     })
-    //   })
-    // const data = await response.json()
-    
-    // location.reload()
-
+    const response = await fetch('/saveSprite', {
+        method: 'put',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            character: currentChar,
+            sprite : currentSpriteID,
+            dataURI: currentDataURI
+        })
+      })
+    const data = await response.json()
+    console.log(`this is data: ${data}`)
+    location.reload()
   }
   catch(err)
   {
     console.log(err)
   }
-
 }
 
-
-// async function tryLoad(name){
-
-//   const drawingName = String(name.name);
-
-//   try
-//   {
-//     const response = await fetch('/loadOriginalSprite', //TODO:Dit moet de orignele tekening laden als je terug wilt
-//     {
-//       method: 'put',
-//       headers: {'Content-Type': 'application/json'},
-//       body: JSON.stringify({
-//          name: drawingName
-//       })
-//     })
-//     const data = await response.json()
-//     console.log(data);
-//      location.reload()
-//   }
-//   catch(err)
-//   {
-//       console.log(err)
-//   }
-// }
-
-
-function tryLoadImg(){
-  // /imgSpace.src = picCode.innerText;
+function saveLogs(){
+   console.log(`saving character: ${currentChar}`);
+   console.log(`saving sprite: ${currentSpriteID}`);
+   console.log(`saving dataURI: ${currentDataURI}`);
 }
-tryLoadImg()
 
+async function tryLoadOriginal(element){
 
+  const ogChar = String(element.name);
+  const ogSprite = String(element.value);
+  //loadLogs();
+
+  try
+  {
+    const response = await fetch('/loadOriginalSprite',
+    {
+      method: 'put',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+         character: ogChar,
+         sprite: ogSprite
+      })
+    })
+    const data = await response.json()
+    location.reload()
+  }
+  catch(err)
+  {
+      console.log(err)
+  }
+}
+
+function loadLogs(){
+  console.log(`character: ${ogChar}`)
+  console.log(`sprite: ${ogSprite}`)
+}
 //SAVING==================================================================
 //DRAWING==================================================================
-
-
 
 // canvas.width = window.innerWidth;
 // canvas.height = window.innerHeight;
@@ -194,7 +145,6 @@ function draw(e) {
 
 function activeCanvas(canvasElement){
    ctx = canvasElement.getContext('2d');
-   console.log("hello")
 }
 
 Array.from(canvas).forEach((element)=>{

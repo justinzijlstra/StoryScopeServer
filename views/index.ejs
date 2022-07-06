@@ -34,10 +34,11 @@
         <!-- <button id="loadDrawingBTN">load</button> -->
         <!-- <button>save</button> -->
         <section class="buttons">
-            <form action="/loadOriginalSprite" method="POST">
-              <input type="submit" value="Load Original Drawing">
-            </form>
-            <button class="saveButton" name= <%= info[i].sprite %> >savae</button>
+            <!-- <form action="/loadOriginalSprite" method="PUT">
+                <input type="submit" value="Load Original Drawing" name=<%= info[i].sprite %>>
+            </form> -->
+            <button class="loadButton" name="<%= info[i].character %>" value=<%= info[i].sprite %>>load</button>
+            <button class="saveButton" name="<%= info[i].character %>" id=<%= info[i].sprite %>>save</button>
             <!-- <form action="/saveSprite" method="POST">
                 <span><%= info[i].character %></span>
                 <span><%= info[i].sprite %></span>

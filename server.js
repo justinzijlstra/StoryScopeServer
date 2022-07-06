@@ -24,43 +24,55 @@ app.get('/',(request, response)=>{ //dit stuurt naar de index.ejs loop dus als e
 
     db.collection('jzCol').find().toArray() //dit moet dus originele characters laden 
     .then(data => {
-        response.render('index.ejs', { info: data })//TODO:
-        //console.log(data)
+        response.render('index.ejs', { info: data })
     })
     .catch(error => console.error(error))
 })
 
-app.post('/loadOriginalSprite',(request, response)=>{ 
-    console.log(request)
-    console.log("JEZUS")
-    // console.log(request.body.name);
-    // db.collection('jzOriginalSprite').find({name: request.body.name}).toArray()
-    // .then(result => {
-    //     response.json(result)
-    // })
+app.put('/loadOriginalSprite',(request, response)=>{ 
+
+    db.collection('jzOriginalSprite').find({sprite: request.body.sprite}).toArray()
+    .then(result => 
+    {
+        db.collection('jzCol').updateOne(
+        {
+            character: request.body.character,
+            sprite: request.body.sprite
+        },
+        {
+            $set: 
+            {
+                dataURI: result[0].dataURI
+            }
+        },
+        {
+            upsert: true
+        })
+        .catch(error => console.error(error))
+        response.json('original sprite loaded')
+    })
+    .catch(error => console.log(error))
 })
 
-app.post('/saveSprite', (request, response) => {  //Er komt wat binnen en gaat wat naar main.js
+app.put('/saveSprite', (request, response) => { 
 
-    console.log(request.body.sprite)
-    // db.collection('jzCol').findOne({ //doorzoek de collectie 
-    //     name : request.body.name, //naar deze naam
-    // })
-    // .then(result =>{ //het resultaat
-    //     if(result != null) //als het resultaat niet niks is
-    //     {
-    //         db.collection('jzCol').deleteOne({ //verwijder dan het resultaat
-    //             name: request.body.name //met deze naam
-    //         })
-    //         .then(result => {
-    //             response.json('Rapper Deleted')
-    //         })
-    //     }
-    // })
-    // db.collection('jzCol').insertOne({ //stop er de nieuwe tekening in 
-    //     name : request.body.name,
-    //     itsMyData: request.body.itsMyData
-    // })
+    db.collection('jzCol').updateOne(
+        {
+            character: request.body.character,
+            sprite: request.body.sprite
+        },
+        {
+            $set: 
+            {
+                dataURI: request.body.dataURI
+            }
+        },
+        {
+            upsert: true
+        }).then(result=>{
+            response.json('sprite saved to database')
+        })
+        .catch(error => console.error(error))
 })
 
 app.listen(process.env.PORT || PORT, ()=>{
