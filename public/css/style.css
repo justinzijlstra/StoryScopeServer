@@ -2,6 +2,18 @@ h1{
     color: red;
 }
 
-#draw{
+canvas, img{
     border: solid 5px black;
+}
+span{
+    color : green;
+    /* display: none; */
+}
+.drawSection{
+    background-color: aqua;
+    border: solid 5px red;
+}
+
+.buttons{
+    display: flex;
 }

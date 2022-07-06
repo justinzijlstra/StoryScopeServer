@@ -19,17 +19,35 @@
 </head>
 <body>
 
-    <% for(let i=0; i < info.length; i++) {%> //TODO: hier moet de database worden gebouwd
-        <li class="rapper">
-            <span><%= info[i].stageName %></span>
-            <span><%= info[i].birthName %></span>
-            <span><%= info[i].likes %></span>
-            <span id="spanWithPictureCode"><%= picture %></span>
-            <span class='fa fa-thumbs-up'></span>
-            <span class='fa fa-trash'></span>
-        </li>
+    <!--hier moet de database worden gebouwd -->
+    <!-- //TODO: DUs voor elke in de database jzOriginalSprite
+        maak je een canvas en een img tag en een save en revert button 
+    -->
+    <% for(let i=0; i < info.length; i++) {%> 
+    <section class="drawSection">
+        <span><%= info[i].character %></span>
+        <span><%= info[i].sprite %></span>
+        <br>
+        <img src= <%= info[i].dataURI %>  alt="">
+        <canvas id=<%=info[i].sprite %> class="draw" width="500" height="500"></canvas>
+        <!-- <button id="saveDrawingBTN" name="head" >save</button> -->
+        <!-- <button id="loadDrawingBTN">load</button> -->
+        <!-- <button>save</button> -->
+        <section class="buttons">
+            <form action="/loadOriginalSprite" method="POST">
+              <input type="submit" value="Load Original Drawing">
+            </form>
+            <button class="saveButton" name= <%= info[i].sprite %> >savae</button>
+            <!-- <form action="/saveSprite" method="POST">
+                <span><%= info[i].character %></span>
+                <span><%= info[i].sprite %></span>
+                <span><%= info[i].dataURI %></span>
+              <input type="submit" value="Save Drawing to Database">
+            </form> -->
+        </section>
+        <!-- <button class="loadButton" action="/loadOriginalSprite" method="POST" name="GGGGG">load</button> -->
+    </section>
     <% } %>
-
     <!-- <form action="/addRapper" method="POST">
         <input type="text" placeholder="Stage Name" name="stageName">
         <input type="text" placeholder="Birth Name" name="birthName">
@@ -37,9 +55,9 @@
     </form> -->
 
     
-    <canvas id="draw" width="500" height="500" name="clientDrawing" ></canvas>
-    <img  id="displayDrawing" src="" alt="">
-    <button id="saveDrawingBTN" name="head" >save</button>
+    <!-- <img  id="displayDrawing" src="" alt=""> -->
+    <!-- <canvas class="draw" width="500" height="500" name="clientDrawing" ></canvas> -->
+
 
     <script src='js/main.js'></script>
 </body>
