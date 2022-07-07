@@ -3,9 +3,23 @@ const drawingSections = document.querySelectorAll('.drawSection')
 
 Array.from(drawingSections).forEach((element)=>{
   //console.log(element.childNodes) //all nodes
-  element.childNodes[9].height = element.childNodes[7].height
-  element.childNodes[9].width = element.childNodes[7].width
+  const spriteImage = element.childNodes[7];
+  const spriteCanvas = element.childNodes[9];
+  const ctx = spriteCanvas.getContext('2d');
+
+  spriteCanvas.height = spriteImage.height;
+  spriteCanvas.width = spriteImage.width;
+  
+  spriteImage.onload = function(){
+    ctx.drawImage(spriteImage, 0, 0)
+  };
+
+  
+
+   element.childNodes[7].style.display = 'none'; //Hide img
   // console.log(element.childNodes[9]) //dit is het canvas
+
+
 })
 //sections==================================================================
 //SAVING==================================================================
